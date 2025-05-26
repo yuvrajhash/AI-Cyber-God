@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏢 Quantum-AI Cyber God - Phase 4 Enterprise Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .metric-card {
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        
+        .status-healthy { background-color: #10b981; }
+        .status-warning { background-color: #f59e0b; }
+        .status-error { background-color: #ef4444; }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .sidebar {
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white">
+    <!-- Header -->
+    <header class="glass-card border-b border-slate-700/50 sticky top-0 z-50">
+        <div class="px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button id="sidebarToggle" class="p-2 rounded-lg hover:bg-white/10 transition-colors">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                    <h1 class="text-2xl font-bold gradient-text">🏢 Quantum-AI Cyber God</h1>
+                    <span class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-full text-sm font-medium">Phase 4 Enterprise</span>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <span class="status-indicator status-healthy pulse"></span>
+                        <span class="text-sm text-slate-300">All Systems Operational</span>
+                    </div>
+                    
+                    <select id="tenantSelector" class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm">
+                        <option value="">Select Tenant</option>
+                    </select>
+                    
+                    <button class="p-2 rounded-lg hover:bg-white/10 transition-colors">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                    </button>
+                    
+                    <button class="p-2 rounded-lg hover:bg-white/10 transition-colors">
+                        <i data-lucide="settings" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar w-64 glass-card border-r border-slate-700/50 h-screen sticky top-16">
+            <nav class="p-4 space-y-2">
+                <button class="tab-button active w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left hover:bg-white/10 transition-colors" data-tab="overview">
+                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                    <span>Overview</span>
+                </button>
+                
+                <button class="tab-button w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left hover:bg-white/10 transition-colors" data-tab="analytics">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                    <span>Advanced Analytics</span>
+                </button>
+                
+                <button class="tab-button w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left hover:bg-white/10 transition-colors" data-tab="threat-models">
+                    <i data-lucide="brain" class="w-5 h-5"></i>
+                    <span>Threat Models</span>
+                </button>
+                
+                <button class="tab-button w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left hover:bg-white/10 transition-colors" data-tab="compliance">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    <span>Compliance</span>
+                </button>
+                
+                <button class="tab-button w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left hover:bg-white/10 transition-colors" data-tab="integrations">
+                    <i data-lucide="plug" class="w-5 h-5"></i>
+                    <span>Integrations</span>
+                </button>
+                
+                <button class="tab-button w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left hover:bg-white/10 transition-colors" data-tab="users">
+                    <i data-lucide="users" class="w-5 h-5"></i>
+                    <span>User Management</span>
+                </button>
+                
+                <button class="tab-button w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left hover:bg-white/10 transition-colors" data-tab="api-management">
+                    <i data-lucide="zap" class="w-5 h-5"></i>
+                    <span>API Management</span>
+                </button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold mb-2">Enterprise Dashboard</h2>
+                    <p class="text-slate-400">Comprehensive security overview for your organization</p>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="metric-card glass-card rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 bg-green-500/20 rounded-lg">
+                                <i data-lucide="shield-check" class="w-6 h-6 text-green-400"></i>
+                            </div>
+                            <span class="text-2xl font-bold text-green-400" id="threatsBlocked">0</span>
+                        </div>
+                        <h3 class="font-semibold text-slate-300">Threats Blocked</h3>
+                        <p class="text-sm text-slate-500">Last 24 hours</p>
+                    </div>
+
+                    <div class="metric-card glass-card rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 bg-blue-500/20 rounded-lg">
+                                <i data-lucide="activity" class="w-6 h-6 text-blue-400"></i>
+                            </div>
+                            <span class="text-2xl font-bold text-blue-400" id="systemHealth">0%</span>
+                        </div>
+                        <h3 class="font-semibold text-slate-300">System Health</h3>
+                        <p class="text-sm text-slate-500">Overall performance</p>
+                    </div>
+
+                    <div class="metric-card glass-card rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 bg-purple-500/20 rounded-lg">
+                                <i data-lucide="users" class="w-6 h-6 text-purple-400"></i>
+                            </div>
+                            <span class="text-2xl font-bold text-purple-400" id="activeUsers">0</span>
+                        </div>
+                        <h3 class="font-semibold text-slate-300">Active Users</h3>
+                        <p class="text-sm text-slate-500">Currently online</p>
+                    </div>
+
+                    <div class="metric-card glass-card rounded-xl p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="p-3 bg-orange-500/20 rounded-lg">
+                                <i data-lucide="trending-up" class="w-6 h-6 text-orange-400"></i>
+                            </div>
+                            <span class="text-2xl font-bold text-orange-400" id="complianceScore">0%</span>
+                        </div>
+                        <h3 class="font-semibold text-slate-300">Compliance Score</h3>
+                        <p class="text-sm text-slate-500">Overall rating</p>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-xl font-semibold mb-4">Threat Detection Trends</h3>
+                        <div class="chart-container">
+                            <canvas id="threatTrendsChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-xl font-semibold mb-4">Compliance Status</h3>
+                        <div class="chart-container">
+                            <canvas id="complianceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-xl font-semibold mb-4">Recent Activities</h3>
+                    <div id="recentActivities" class="space-y-4">
+                        <!-- Activities will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Analytics Tab -->
+            <div id="analytics" class="tab-content">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold mb-2">Advanced Analytics</h2>
+                    <p class="text-slate-400">Deep insights and business intelligence</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-xl font-semibold mb-4">Threat Categories</h3>
+                        <div class="chart-container">
+                            <canvas id="threatCategoriesChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-xl font-semibold mb-4">Geographic Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="geoChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-xl font-semibold mb-4">Performance Metrics</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm text-slate-300">Response Time</span>
+                                    <span class="text-sm text-green-400">45ms</span>
+                                </div>
+                                <div class="w-full bg-slate-700 rounded-full h-2">
+                                    <div class="bg-green-400 h-2 rounded-full" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm text-slate-300">Accuracy</span>
+                                    <span class="text-sm text-blue-400">96.5%</span>
+                                </div>
+                                <div class="w-full bg-slate-700 rounded-full h-2">
+                                    <div class="bg-blue-400 h-2 rounded-full" style="width: 96%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-2">
+                                    <span class="text-sm text-slate-300">Uptime</span>
+                                    <span class="text-sm text-purple-400">99.9%</span>
+                                </div>
+                                <div class="w-full bg-slate-700 rounded-full h-2">
+                                    <div class="bg-purple-400 h-2 rounded-full" style="width: 99%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Insights -->
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-xl font-semibold mb-4">Key Insights & Recommendations</h3>
+                    <div id="keyInsights" class="space-y-4">
+                        <!-- Insights will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Threat Models Tab -->
+            <div id="threat-models" class="tab-content">
+                <div class="mb-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-3xl font-bold mb-2">Custom Threat Models</h2>
+                            <p class="text-slate-400">Industry-specific AI threat detection models</p>
+                        </div>
+                        <button id="createThreatModel" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                            <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>
+                            Create Model
+                        </button>
+                    </div>
+                </div>
+
+                <div id="threatModelsList" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Threat models will be populated here -->
+                </div>
+            </div>
+
+            <!-- Compliance Tab -->
+            <div id="compliance" class="tab-content">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold mb-2">Compliance Management</h2>
+                    <p class="text-slate-400">Monitor and manage regulatory compliance</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-xl font-semibold mb-4">Overall Score</h3>
+                        <div class="text-center">
+                            <div class="text-4xl font-bold text-green-400 mb-2" id="overallComplianceScore">94.2%</div>
+                            <p class="text-slate-400">Excellent</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-xl font-semibold mb-4">Active Frameworks</h3>
+                        <div id="complianceFrameworks" class="space-y-2">
+                            <!-- Frameworks will be populated here -->
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-xl font-semibold mb-4">Upcoming Audits</h3>
+                        <div id="upcomingAudits" class="space-y-2">
+                            <!-- Audits will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-xl font-semibold mb-4">Compliance Reports</h3>
+                    <div class="flex justify-between items-center mb-4">
+                        <select class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2">
+                            <option>SOC2</option>
+                            <option>ISO27001</option>
+                            <option>HIPAA</option>
+                            <option>GDPR</option>
+                        </select>
+                        <button class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors">
+                            Generate Report
+                        </button>
+                    </div>
+                    <div id="complianceReports" class="space-y-4">
+                        <!-- Reports will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Integrations Tab -->
+            <div id="integrations" class="tab-content">
+                <div class="mb-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-3xl font-bold mb-2">Enterprise Integrations</h2>
+                            <p class="text-slate-400">Connect with SIEM, SOAR, and other enterprise systems</p>
+                        </div>
+                        <button id="createIntegration" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                            <i data-lucide="plus" class="w-4 h-4 inline mr-2"></i>
+                            Add Integration
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="glass-card rounded-xl p-6 text-center">
+                        <div class="p-3 bg-blue-500/20 rounded-lg inline-block mb-4">
+                            <i data-lucide="database" class="w-8 h-8 text-blue-400"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">SIEM</h3>
+                        <p class="text-sm text-slate-400 mb-4">Security Information & Event Management</p>
+                        <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">2 Active</span>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-6 text-center">
+                        <div class="p-3 bg-purple-500/20 rounded-lg inline-block mb-4">
+                            <i data-lucide="zap" class="w-8 h-8 text-purple-400"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">SOAR</h3>
+                        <p class="text-sm text-slate-400 mb-4">Security Orchestration & Response</p>
+                        <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">1 Active</span>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-6 text-center">
+                        <div class="p-3 bg-green-500/20 rounded-lg inline-block mb-4">
+                            <i data-lucide="ticket" class="w-8 h-8 text-green-400"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">Ticketing</h3>
+                        <p class="text-sm text-slate-400 mb-4">IT Service Management</p>
+                        <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">3 Active</span>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-6 text-center">
+                        <div class="p-3 bg-orange-500/20 rounded-lg inline-block mb-4">
+                            <i data-lucide="message-circle" class="w-8 h-8 text-orange-400"></i>
+                        </div>
+                        <h3 class="font-semibold mb-2">Communication</h3>
+                        <p class="text-sm text-slate-400 mb-4">Slack, Teams, Email</p>
+                        <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">4 Active</span>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-xl font-semibold mb-4">Active Integrations</h3>
+                    <div id="integrationsList" class="space-y-4">
+                        <!-- Integrations will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="users" class="tab-content">
+                <div class="mb-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-3xl font-bold mb-2">User Management</h2>
+                            <p class="text-slate-400">Manage enterprise users and permissions</p>
+                        </div>
+                        <button id="createUser" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors">
+                            <i data-lucide="user-plus" class="w-4 h-4 inline mr-2"></i>
+                            Add User
+                        </button>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-semibold">Enterprise Users</h3>
+                        <div class="flex space-x-2">
+                            <input type="text" placeholder="Search users..." class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm">
+                            <select class="bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-sm">
+                                <option>All Roles</option>
+                                <option>Admin</option>
+                                <option>Analyst</option>
+                                <option>Viewer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="usersList" class="space-y-4">
+                        <!-- Users will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Management Tab -->
+            <div id="api-management" class="tab-content">
+                <div class="mb-6">
+                    <h2 class="text-3xl font-bold mb-2">API Management</h2>
+                    <p class="text-slate-400">Monitor API usage and rate limits</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-xl font-semibold mb-4">API Usage</h3>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-blue-400 mb-2" id="apiCalls">0</div>
+                            <p class="text-slate-400">Calls Today</p>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-xl font-semibold mb-4">Rate Limit Status</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm">Per Minute</span>
+                                    <span class="text-sm text-green-400">85/2000</span>
+                                </div>
+                                <div class="w-full bg-slate-700 rounded-full h-2">
+                                    <div class="bg-green-400 h-2 rounded-full" style="width: 4%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between mb-1">
+                                    <span class="text-sm">Per Hour</span>
+                                    <span class="text-sm text-blue-400">1,250/100,000</span>
+                                </div>
+                                <div class="w-full bg-slate-700 rounded-full h-2">
+                                    <div class="bg-blue-400 h-2 rounded-full" style="width: 1%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card rounded-xl p-6">
+                        <h3 class="text-xl font-semibold mb-4">Response Times</h3>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-green-400 mb-2">48ms</div>
+                            <p class="text-slate-400">Average</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-xl p-6">
+                    <h3 class="text-xl font-semibold mb-4">API Endpoints</h3>
+                    <div id="apiEndpoints" class="space-y-4">
+                        <!-- API endpoints will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Global variables
+        let currentTenant = null;
+        let charts = {};
+        const API_BASE = 'http://localhost:8004';
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeLucide();
+            setupEventListeners();
+            loadTenants();
+            initializeCharts();
+            startRealTimeUpdates();
+        });
+
+        function initializeLucide() {
+            lucide.createIcons();
+        }
+
+        function setupEventListeners() {
+            // Sidebar toggle
+            document.getElementById('sidebarToggle').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('collapsed');
+            });
+
+            // Tab navigation
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+
+            // Tenant selector
+            document.getElementById('tenantSelector').addEventListener('change', function() {
+                currentTenant = this.value;
+                if (currentTenant) {
+                    loadTenantData();
+                }
+            });
+        }
+
+        function switchTab(tabId) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+
+            // Load tab-specific data
+            loadTabData(tabId);
+        }
+
+        async function loadTenants() {
+            try {
+                // For demo purposes, we'll create mock tenants
+                const tenants = [
+                    { id: 'demo-tenant-1', name: 'TechCorp Industries' },
+                    { id: 'demo-tenant-2', name: 'HealthSecure Inc' },
+                    { id: 'demo-tenant-3', name: 'FinanceGuard LLC' }
+                ];
+
+                const selector = document.getElementById('tenantSelector');
+                tenants.forEach(tenant => {
+                    const option = document.createElement('option');
+                    option.value = tenant.id;
+                    option.textContent = tenant.name;
+                    selector.appendChild(option);
+                });
+
+                // Auto-select first tenant
+                if (tenants.length > 0) {
+                    selector.value = tenants[0].id;
+                    currentTenant = tenants[0].id;
+                    loadTenantData();
+                }
+            } catch (error) {
+                console.error('Error loading tenants:', error);
+            }
+        }
+
+        async function loadTenantData() {
+            if (!currentTenant) return;
+
+            try {
+                // Load overview data
+                await loadOverviewData();
+                await loadAnalyticsData();
+                await loadThreatModels();
+                await loadComplianceData();
+                await loadIntegrations();
+                await loadUsers();
+                await loadApiData();
+            } catch (error) {
+                console.error('Error loading tenant data:', error);
+            }
+        }
+
+        async function loadOverviewData() {
+            // Mock data for demo
+            const data = {
+                threatsBlocked: Math.floor(Math.random() * 100) + 50,
+                systemHealth: Math.floor(Math.random() * 10) + 90,
+                activeUsers: Math.floor(Math.random() * 20) + 10,
+                complianceScore: Math.floor(Math.random() * 10) + 90
+            };
+
+            document.getElementById('threatsBlocked').textContent = data.threatsBlocked;
+            document.getElementById('systemHealth').textContent = data.systemHealth + '%';
+            document.getElementById('activeUsers').textContent = data.activeUsers;
+            document.getElementById('complianceScore').textContent = data.complianceScore + '%';
+
+            // Load recent activities
+            loadRecentActivities();
+        }
+
+        function loadRecentActivities() {
+            const activities = [
+                {
+                    type: 'threat_detected',
+                    message: 'High-severity threat detected and blocked',
+                    time: '2 minutes ago',
+                    severity: 'high'
+                },
+                {
+                    type: 'compliance_check',
+                    message: 'SOC2 compliance verification completed',
+                    time: '15 minutes ago',
+                    severity: 'info'
+                },
+                {
+                    type: 'integration_alert',
+                    message: 'SIEM integration health check passed',
+                    time: '30 minutes ago',
+                    severity: 'success'
+                },
+                {
+                    type: 'user_activity',
+                    message: 'New enterprise user created',
+                    time: '1 hour ago',
+                    severity: 'info'
+                }
+            ];
+
+            const container = document.getElementById('recentActivities');
+            container.innerHTML = activities.map(activity => `
+                <div class="flex items-center space-x-4 p-4 bg-slate-800/50 rounded-lg">
+                    <div class="p-2 bg-${getSeverityColor(activity.severity)}-500/20 rounded-lg">
+                        <i data-lucide="${getActivityIcon(activity.type)}" class="w-4 h-4 text-${getSeverityColor(activity.severity)}-400"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-medium">${activity.message}</p>
+                        <p class="text-xs text-slate-400">${activity.time}</p>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function getSeverityColor(severity) {
+            const colors = {
+                'high': 'red',
+                'medium': 'orange',
+                'low': 'yellow',
+                'info': 'blue',
+                'success': 'green'
+            };
+            return colors[severity] || 'gray';
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                'threat_detected': 'shield-alert',
+                'compliance_check': 'check-circle',
+                'integration_alert': 'plug',
+                'user_activity': 'user'
+            };
+            return icons[type] || 'activity';
+        }
+
+        async function loadAnalyticsData() {
+            // Load key insights
+            const insights = [
+                {
+                    type: 'threat_trend',
+                    severity: 'medium',
+                    title: 'Increased Phishing Activity',
+                    description: 'Phishing attempts have increased by 23% in the last 7 days',
+                    recommendation: 'Consider implementing additional email security training'
+                },
+                {
+                    type: 'performance',
+                    severity: 'low',
+                    title: 'Response Time Optimization',
+                    description: 'Average response time is 15% faster than industry benchmark',
+                    recommendation: 'Current performance is excellent, maintain current configuration'
+                },
+                {
+                    type: 'compliance',
+                    severity: 'high',
+                    title: 'Compliance Score Improvement',
+                    description: 'SOC2 compliance score improved to 96.5%',
+                    recommendation: 'Focus on remaining 3.5% to achieve full compliance'
+                }
+            ];
+
+            const container = document.getElementById('keyInsights');
+            container.innerHTML = insights.map(insight => `
+                <div class="p-4 bg-slate-800/50 rounded-lg border-l-4 border-${getSeverityColor(insight.severity)}-400">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <h4 class="font-semibold text-${getSeverityColor(insight.severity)}-400">${insight.title}</h4>
+                            <p class="text-sm text-slate-300 mt-1">${insight.description}</p>
+                            <p class="text-xs text-slate-400 mt-2"><strong>Recommendation:</strong> ${insight.recommendation}</p>
+                        </div>
+                        <span class="px-2 py-1 bg-${getSeverityColor(insight.severity)}-500/20 text-${getSeverityColor(insight.severity)}-400 rounded text-xs">
+                            ${insight.severity.toUpperCase()}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadThreatModels() {
+            const models = [
+                {
+                    id: '1',
+                    name: 'FinTech Security Model',
+                    type: 'financial_services',
+                    status: 'deployed',
+                    accuracy: 96.5,
+                    threats_detected: 1247
+                },
+                {
+                    id: '2',
+                    name: 'Healthcare Threat Detection',
+                    type: 'healthcare',
+                    status: 'training',
+                    accuracy: 89.2,
+                    threats_detected: 892
+                }
+            ];
+
+            const container = document.getElementById('threatModelsList');
+            container.innerHTML = models.map(model => `
+                <div class="glass-card rounded-xl p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">${model.name}</h3>
+                        <span class="px-3 py-1 bg-${model.status === 'deployed' ? 'green' : 'orange'}-500/20 text-${model.status === 'deployed' ? 'green' : 'orange'}-400 rounded-full text-sm">
+                            ${model.status}
+                        </span>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">Type</span>
+                            <span class="capitalize">${model.type.replace('_', ' ')}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">Accuracy</span>
+                            <span class="text-green-400">${model.accuracy}%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">Threats Detected</span>
+                            <span class="text-blue-400">${model.threats_detected}</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex space-x-2">
+                        <button class="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm transition-colors">
+                            Configure
+                        </button>
+                        <button class="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm transition-colors">
+                            <i data-lucide="more-horizontal" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        async function loadComplianceData() {
+            const frameworks = [
+                { name: 'SOC2', score: 96.5, status: 'compliant' },
+                { name: 'ISO27001', score: 94.2, status: 'compliant' },
+                { name: 'HIPAA', score: 92.8, status: 'compliant' }
+            ];
+
+            const frameworksContainer = document.getElementById('complianceFrameworks');
+            frameworksContainer.innerHTML = frameworks.map(fw => `
+                <div class="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
+                    <span class="font-medium">${fw.name}</span>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-green-400">${fw.score}%</span>
+                        <span class="status-indicator status-healthy"></span>
+                    </div>
+                </div>
+            `).join('');
+
+            const audits = [
+                { framework: 'SOC2', date: '2024-03-15', type: 'Annual' },
+                { framework: 'ISO27001', date: '2024-04-20', type: 'Surveillance' }
+            ];
+
+            const auditsContainer = document.getElementById('upcomingAudits');
+            auditsContainer.innerHTML = audits.map(audit => `
+                <div class="p-3 bg-slate-800/50 rounded-lg">
+                    <div class="font-medium">${audit.framework} ${audit.type}</div>
+                    <div class="text-sm text-slate-400">${audit.date}</div>
+                </div>
+            `).join('');
+        }
+
+        async function loadIntegrations() {
+            const integrations = [
+                {
+                    name: 'Splunk SIEM',
+                    type: 'siem',
+                    status: 'active',
+                    health: 98.5,
+                    events_sent: 1247
+                },
+                {
+                    name: 'Security Team Slack',
+                    type: 'slack',
+                    status: 'active',
+                    health: 99.2,
+                    events_sent: 892
+                },
+                {
+                    name: 'ServiceNow ITSM',
+                    type: 'ticketing',
+                    status: 'active',
+                    health: 96.8,
+                    events_sent: 456
+                }
+            ];
+
+            const container = document.getElementById('integrationsList');
+            container.innerHTML = integrations.map(integration => `
+                <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg">
+                    <div class="flex items-center space-x-4">
+                        <div class="p-2 bg-blue-500/20 rounded-lg">
+                            <i data-lucide="${getIntegrationIcon(integration.type)}" class="w-5 h-5 text-blue-400"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">${integration.name}</h4>
+                            <p class="text-sm text-slate-400 capitalize">${integration.type}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-right">
+                            <div class="text-sm font-medium text-green-400">${integration.health}%</div>
+                            <div class="text-xs text-slate-400">${integration.events_sent} events</div>
+                        </div>
+                        <span class="status-indicator status-healthy"></span>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function getIntegrationIcon(type) {
+            const icons = {
+                'siem': 'database',
+                'soar': 'zap',
+                'ticketing': 'ticket',
+                'slack': 'message-circle',
+                'teams': 'users',
+                'email': 'mail'
+            };
+            return icons[type] || 'plug';
+        }
+
+        async function loadUsers() {
+            const users = [
+                {
+                    name: 'John Smith',
+                    email: 'john.smith@company.com',
+                    role: 'Security Admin',
+                    department: 'IT Security',
+                    last_login: '2 hours ago',
+                    status: 'active'
+                },
+                {
+                    name: 'Sarah Johnson',
+                    email: 'sarah.johnson@company.com',
+                    role: 'Security Analyst',
+                    department: 'SOC',
+                    last_login: '1 day ago',
+                    status: 'active'
+                },
+                {
+                    name: 'Mike Davis',
+                    email: 'mike.davis@company.com',
+                    role: 'Compliance Officer',
+                    department: 'Risk Management',
+                    last_login: '3 hours ago',
+                    status: 'active'
+                }
+            ];
+
+            const container = document.getElementById('usersList');
+            container.innerHTML = users.map(user => `
+                <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+                            <span class="text-white font-semibold">${user.name.split(' ').map(n => n[0]).join('')}</span>
+                        </div>
+                        <div>
+                            <h4 class="font-medium">${user.name}</h4>
+                            <p class="text-sm text-slate-400">${user.email}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-right">
+                            <div class="text-sm font-medium">${user.role}</div>
+                            <div class="text-xs text-slate-400">${user.department}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-slate-300">${user.last_login}</div>
+                            <span class="status-indicator status-healthy"></span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadApiData() {
+            document.getElementById('apiCalls').textContent = '12,547';
+
+            const endpoints = [
+                { path: '/api/enterprise/tenants/{id}/dashboard', calls: 2847, avg_response: '45ms' },
+                { path: '/api/enterprise/tenants/{id}/analytics/overview', calls: 1923, avg_response: '67ms' },
+                { path: '/api/enterprise/tenants/{id}/threat-models', calls: 1456, avg_response: '89ms' },
+                { path: '/api/enterprise/tenants/{id}/compliance/status', calls: 1234, avg_response: '34ms' }
+            ];
+
+            const container = document.getElementById('apiEndpoints');
+            container.innerHTML = endpoints.map(endpoint => `
+                <div class="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg">
+                    <div>
+                        <code class="text-blue-400 text-sm">${endpoint.path}</code>
+                    </div>
+                    <div class="flex items-center space-x-6">
+                        <div class="text-right">
+                            <div class="text-sm font-medium">${endpoint.calls}</div>
+                            <div class="text-xs text-slate-400">calls today</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-medium text-green-400">${endpoint.avg_response}</div>
+                            <div class="text-xs text-slate-400">avg response</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadTabData(tabId) {
+            switch(tabId) {
+                case 'overview':
+                    loadOverviewData();
+                    break;
+                case 'analytics':
+                    loadAnalyticsData();
+                    break;
+                case 'threat-models':
+                    loadThreatModels();
+                    break;
+                case 'compliance':
+                    loadComplianceData();
+                    break;
+                case 'integrations':
+                    loadIntegrations();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'api-management':
+                    loadApiData();
+                    break;
+            }
+        }
+
+        function initializeCharts() {
+            // Threat Trends Chart
+            const threatCtx = document.getElementById('threatTrendsChart').getContext('2d');
+            charts.threatTrends = new Chart(threatCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Threats Detected',
+                        data: [65, 59, 80, 81, 56, 55, 40],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#e2e8f0' }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' } },
+                        y: { ticks: { color: '#94a3b8' } }
+                    }
+                }
+            });
+
+            // Compliance Chart
+            const complianceCtx = document.getElementById('complianceChart').getContext('2d');
+            charts.compliance = new Chart(complianceCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['SOC2', 'ISO27001', 'HIPAA', 'GDPR'],
+                    datasets: [{
+                        data: [96.5, 94.2, 92.8, 89.1],
+                        backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#e2e8f0' }
+                        }
+                    }
+                }
+            });
+
+            // Threat Categories Chart
+            const categoriesCtx = document.getElementById('threatCategoriesChart').getContext('2d');
+            charts.threatCategories = new Chart(categoriesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Malware', 'Phishing', 'Insider', 'DDoS', 'Fraud'],
+                    datasets: [{
+                        label: 'Threats',
+                        data: [25, 19, 15, 12, 8],
+                        backgroundColor: '#8b5cf6'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#e2e8f0' }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#94a3b8' } },
+                        y: { ticks: { color: '#94a3b8' } }
+                    }
+                }
+            });
+
+            // Geographic Chart
+            const geoCtx = document.getElementById('geoChart').getContext('2d');
+            charts.geographic = new Chart(geoCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['North America', 'Europe', 'Asia Pacific', 'Other'],
+                    datasets: [{
+                        data: [45, 32, 18, 5],
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#e2e8f0' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function startRealTimeUpdates() {
+            setInterval(() => {
+                if (currentTenant) {
+                    updateRealTimeMetrics();
+                }
+            }, 30000); // Update every 30 seconds
+        }
+
+        function updateRealTimeMetrics() {
+            // Update threat count
+            const currentThreats = parseInt(document.getElementById('threatsBlocked').textContent);
+            const newThreats = currentThreats + Math.floor(Math.random() * 3);
+            document.getElementById('threatsBlocked').textContent = newThreats;
+
+            // Update system health
+            const healthVariation = (Math.random() - 0.5) * 2; // -1 to +1
+            const currentHealth = parseFloat(document.getElementById('systemHealth').textContent);
+            const newHealth = Math.max(85, Math.min(100, currentHealth + healthVariation));
+            document.getElementById('systemHealth').textContent = newHealth.toFixed(1) + '%';
+
+            // Update charts with new data
+            if (charts.threatTrends) {
+                const newData = Math.floor(Math.random() * 100) + 20;
+                charts.threatTrends.data.datasets[0].data.push(newData);
+                charts.threatTrends.data.datasets[0].data.shift();
+                charts.threatTrends.update('none');
+            }
+        }
+
+        // Test API connectivity
+        async function testApiConnectivity() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                if (response.ok) {
+                    console.log('✅ Phase 4 API is accessible');
+                    return true;
+                }
+            } catch (error) {
+                console.log('⚠️ Phase 4 API not yet available, using demo data');
+                return false;
+            }
+        }
+
+        // Initialize API test
+        testApiConnectivity();
+    </script>
+</body>
+</html> 
